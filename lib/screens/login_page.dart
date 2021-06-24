@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:catalogapp/utils/routes.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: context.canvasColor,
       child: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -89,29 +90,33 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 20.0,
               ),
-              InkWell(
-                onTap: () => moveToHome(context),
-                child: AnimatedContainer(
-                  alignment: Alignment.center,
-                  duration: Duration(seconds: 1),
-                  width: changeButton ? 40 : 110.0,
-                  height: 40.0,
-                  child: changeButton
-                      ? Icon(
-                          Icons.done,
-                          color: Colors.white,
-                        )
-                      : Text(
-                          "Login",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
+              Material(
+                color: context.theme.buttonColor,
+                child: InkWell(
+                  onTap: () => moveToHome(context),
+                  child: AnimatedContainer(
+                    alignment: Alignment.center,
+                    duration: Duration(seconds: 1),
+                    width: changeButton ? 40 : 110.0,
+                    height: 40.0,
+                    child: changeButton
+                        ? Icon(
+                            Icons.done,
                             color: Colors.white,
+                          )
+                        : Text(
+                            "Login",
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple,
-                    borderRadius: BorderRadius.circular(changeButton ? 40 : 8),
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius:
+                          BorderRadius.circular(changeButton ? 40 : 8),
+                    ),
                   ),
                 ),
               ),

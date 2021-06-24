@@ -1,9 +1,16 @@
-import 'package:catalogapp/widgest/drawer.dart';
-import 'package:catalogapp/widgest/item_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:catalogapp/models/catalog.dart';
 import 'dart:convert';
+
+import 'package:catalogapp/core/store.dart';
+import 'package:catalogapp/models/cart.dart';
+import 'package:catalogapp/utils/routes.dart';
+import 'package:catalogapp/widgest/home_widgets/catalog_header.dart';
+import 'package:catalogapp/widgest/home_widgets/catalog_list.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:velocity_x/velocity_x.dart';
+
+import 'package:catalogapp/models/catalog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -33,22 +40,31 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final _cart = (VxState.store as MyStore).cart;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Catalog App"),
+      backgroundColor: context.canvasColor,
+      floatingActionButton: VxBuilder(
+        mutations: {AddMutation,RemoveMutation},
+        builder: (context, store, status) =>FloatingActionButton(
+          onPressed: () => Navigator.pushNamed(context, MyRoute.cartRoute),
+          backgroundColor: context.theme.buttonColor,
+          child: Icon(CupertinoIcons.bag_badge_plus),
+        ).badge(color: Vx.red400, count: _cart.items.length,),
       ),
-      drawer: MyDrawer(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: (CatalogModel.items != null && CatalogModel.items.isNotEmpty)
-            ? ListView.builder(
-                itemCount: CatalogModel.items.length,
-                itemBuilder: (context, index) {
-                  return ItemWidget(item: CatalogModel.items[index]);
-                })
-            : Center(
-                child: CircularProgressIndicator(),
-              ),
+      body: SafeArea(
+        child: Container(
+          padding: Vx.m32,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CatalogHeader(),
+              if (CatalogModel.items != null && CatalogModel.items.isNotEmpty)
+                CatalogList().py12().expand()
+              else
+                CircularProgressIndicator().centered().expand(),
+            ],
+          ),
+        ),
       ),
     );
   }
